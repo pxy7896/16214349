@@ -1,0 +1,259 @@
+#coding = utf-8
+import pandas as pd
+import numpy as np
+import  matplotlib as plt
+
+# series, like vector, vertical aligned.
+s = pd.Series([1,2,np.nan,3])
+print s
+'''
+0    1.0
+1    2.0
+2    NaN
+3    3.0
+dtype: float64
+'''
+##################################################
+# pd.DataFrame like data.frame in R
+# create DataFrame from matrix.
+
+# freq='D' means day
+dates = pd.date_range('20170601', periods=6)
+print dates
+'''
+DatetimeIndex(['2017-06-01', '2017-06-02', '2017-06-03', '2017-06-04',
+               '2017-06-05', '2017-06-06'],
+              dtype='datetime64[ns]', freq='D')
+'''
+
+# np.random.randn(d0,d1..dn) return 6*4 matrix whose data are
+# random floats sampled from a univariate "normal" distribution of mean 0 and variance 1
+# index are rownames; columns are colnames
+df = pd.DataFrame(np.random.randn(6, 4), index=dates, columns=list('ABCD'))
+print df
+'''
+                   A         B         C         D
+2017-06-01 -0.463965  0.960470 -0.186808 -1.198540
+2017-06-02  0.267148 -0.599783  2.143011  1.211458
+2017-06-03 -1.516629  1.228905  0.949323  0.127440
+2017-06-04 -0.509237  0.387529  0.108155 -0.478422
+2017-06-05  0.600630  0.776675  1.906076 -0.382445
+2017-06-06  0.566325  1.189855  0.206210  2.334218
+
+'''
+# create from dict of objects
+df2 = pd.DataFrame({'A' : 1., # float64
+                    # pandas's date class, datetime64[ns]
+                    'B' : pd.Timestamp('20170601'),
+                    # index are rownames.
+                    'C' : pd.Series(1, index=list(range(4)),dtype='float32'),
+                    # array
+                    'D' : np.array([1] * 4, dtype='int32'),
+                    'E' : pd.Categorical(["test", "train", "test", "train"]),
+                    #'F' : 'foo' shows error. Use Series instead.
+                    'F' : pd.Series(['foo'] * 4, dtype='object')
+                    })
+print df2.dtypes
+'''
+A           float64
+B    datetime64[ns]
+C           float32
+D             int32
+E          category
+F            object
+dtype: object
+'''
+print df2
+'''
+     A          B    C  D      E    F
+0  1.0 2017-06-01  1.0  1   test  foo
+1  1.0 2017-06-01  1.0  1  train  foo
+2  1.0 2017-06-01  1.0  1   test  foo
+3  1.0 2017-06-01  1.0  1  train  foo
+
+'''
+
+# view colnames and first n lines or last n lines
+print df2.head(2)
+print df2.tail(3)
+
+print df2.index
+print df2.columns
+'''
+Int64Index([0, 1, 2, 3], dtype='int64')
+Index([u'A', u'B', u'C', u'D', u'E', u'F'], dtype='object')
+'''
+# remove index and columns
+print df2.values
+
+# statistic summary to data
+print df.describe()
+'''
+              A         B         C         D
+count  6.000000  6.000000  6.000000  6.000000
+mean  -0.175955  0.657275  0.854328  0.268951
+std    0.817537  0.688410  0.983534  1.289192
+min   -1.516629 -0.599783 -0.186808 -1.198540
+25%   -0.497919  0.484815  0.132669 -0.454428
+50%   -0.098408  0.868573  0.577766 -0.127502
+75%    0.491531  1.132509  1.666888  0.940453
+max    0.600630  1.228905  2.143011  2.334218
+'''
+# transpose data
+print df.T
+
+print df
+'''
+                   A         B         C         D
+2017-06-01 -0.463965  0.960470 -0.186808 -1.198540
+2017-06-02  0.267148 -0.599783  2.143011  1.211458
+2017-06-03 -1.516629  1.228905  0.949323  0.127440
+2017-06-04 -0.509237  0.387529  0.108155 -0.478422
+2017-06-05  0.600630  0.776675  1.906076 -0.382445
+2017-06-06  0.566325  1.189855  0.206210  2.334218
+'''
+
+# axis = 0 means sort by index, axis = 1 means sort by columns
+print df.sort_index(axis=0, ascending=False)
+'''
+                   A         B         C         D
+2017-06-06  0.566325  1.189855  0.206210  2.334218
+2017-06-05  0.600630  0.776675  1.906076 -0.382445
+2017-06-04 -0.509237  0.387529  0.108155 -0.478422
+2017-06-03 -1.516629  1.228905  0.949323  0.127440
+2017-06-02  0.267148 -0.599783  2.143011  1.211458
+2017-06-01 -0.463965  0.960470 -0.186808 -1.198540
+'''
+
+print df.sort_values(by='B')
+'''
+                   A         B         C         D
+2017-06-02  0.267148 -0.599783  2.143011  1.211458
+2017-06-04 -0.509237  0.387529  0.108155 -0.478422
+2017-06-05  0.600630  0.776675  1.906076 -0.382445
+2017-06-01 -0.463965  0.960470 -0.186808 -1.198540
+2017-06-06  0.566325  1.189855  0.206210  2.334218
+2017-06-03 -1.516629  1.228905  0.949323  0.127440
+'''
+
+##################################################
+# extract data from DataFrame
+##################################################
+
+# simple get
+# slice rows. use number or index
+print df[0:3]
+print df['20170601':'20170603']
+# slice col. return Series
+print df['A']
+
+# by Label
+# print first row
+print df.loc[dates[0]]
+# select some row and some col
+print df.loc[: , ['A','B']]
+# to get fast access to a scalar. use at
+print df.at[dates[0], 'A']
+
+# by position
+# print first row
+print df.iloc[0]
+print df.iloc[3:5, 0:2]
+
+# faster access!!!!
+# only integer index. : is not allowed.
+print df.iat[1,1]
+
+# boolean index
+print df
+'''
+                   A         B         C         D
+2017-06-01 -0.463965  0.960470 -0.186808 -1.198540
+2017-06-02  0.267148 -0.599783  2.143011  1.211458
+2017-06-03 -1.516629  1.228905  0.949323  0.127440
+2017-06-04 -0.509237  0.387529  0.108155 -0.478422
+2017-06-05  0.600630  0.776675  1.906076 -0.382445
+2017-06-06  0.566325  1.189855  0.206210  2.334218
+'''
+# print rows of value A>0
+print df[df.A > 0]
+'''
+                   A         B         C         D
+2017-06-02  0.267148 -0.599783  2.143011  1.211458
+2017-06-05  0.600630  0.776675  1.906076 -0.382445
+2017-06-06  0.566325  1.189855  0.206210  2.334218
+'''
+
+# print only positive values. others are NaN
+print df[df > 0]
+'''
+                   A         B         C         D
+2017-06-01       NaN  0.960470       NaN       NaN
+2017-06-02  0.267148       NaN  2.143011  1.211458
+2017-06-03       NaN  1.228905  0.949323  0.127440
+2017-06-04       NaN  0.387529  0.108155       NaN
+2017-06-05  0.600630  0.776675  1.906076       NaN
+2017-06-06  0.566325  1.189855  0.206210  2.334218
+'''
+
+# copy a DataFrame
+df3 = df.copy()
+df3['E'] = ['one', 'one', 'two', 'three', 'four', 'five']
+print df3
+'''
+                   A         B         C         D      E
+2017-06-01 -0.463965  0.960470 -0.186808 -1.198540    one
+2017-06-02  0.267148 -0.599783  2.143011  1.211458    one
+2017-06-03 -1.516629  1.228905  0.949323  0.127440    two
+2017-06-04 -0.509237  0.387529  0.108155 -0.478422  three
+2017-06-05  0.600630  0.776675  1.906076 -0.382445   four
+2017-06-06  0.566325  1.189855  0.206210  2.334218   five
+'''
+# print selected rows with E.value='two' or 'five'
+print df3[df3['E'].isin(['two', 'five'])]
+'''
+                   A         B         C         D     E
+2017-06-03 -1.516629  1.228905  0.949323  0.127440   two
+2017-06-06  0.566325  1.189855  0.206210  2.334218  five
+'''
+# add another col. or use Series
+df3.loc[:,'F'] = np.array(['hello'] * len(df3))
+print df3
+'''
+                   A         B         C         D      E      F
+2017-06-01 -0.246362 -1.968794  0.596064  1.656667    one  hello
+2017-06-02  0.212728  0.931468 -0.977221 -1.709449    one  hello
+2017-06-03 -0.129513  1.911554  0.998007  0.867370    two  hello
+2017-06-04  0.688660  0.010904 -0.391857  1.546751  three  hello
+2017-06-05  0.283462  0.082037 -1.050666  1.092778   four  hello
+2017-06-06 -1.084382  0.560529 -1.497804 -0.709840   five  hello
+'''
+##################################################
+# NaN
+##################################################
+# dates has been defined at first
+# reindex : change/add/delete index
+df4 = df.reindex(index=dates[0:4], columns=list(df.columns) + ['E'])
+# uninitiated value will be NaN
+df4.loc[dates[0], 'E'] = 1
+print df4
+'''
+                   A         B         C         D    E
+2017-06-01  0.142853  0.380009 -1.268463  0.463704  1.0
+2017-06-02  0.831730  1.615873  0.657926  1.323841  NaN
+2017-06-03 -0.739303  0.524235  0.877496  1.065300  NaN
+2017-06-04  0.785783 -0.655868  0.631207  1.365685  NaN
+'''
+# judge if there is NaN or not
+# return a DataFrame filled with true or false
+print pd.isnull(df4)
+
+# drop na
+print df4.dropna(how='any')
+'''
+                   A         B         C         D    E
+2017-06-01  0.071516  0.377737  1.203327  0.711661  1.0
+'''
+# fill NaN with some number
+print df4.fillna(value=5)
+
