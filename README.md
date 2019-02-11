@@ -1,3 +1,2 @@
-# 16214349
-exercise code for master degree
-Just wanna to say hello world
+# codes for job interviews
+exercise code for leetcode
