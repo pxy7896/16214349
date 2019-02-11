@@ -1,3 +1,4 @@
+'''
 Give a string s, count the number of non-empty (contiguous) substrings that have the same number of 0's and 1's, and all the 0's and all the 1's in these substrings are grouped consecutively.
 
 Substrings that occur multiple times are counted the number of times they occur.
@@ -18,5 +19,22 @@ Note:
 
 s.length will be between 1 and 50,000.
 s will only consist of "0" or "1" characters.
+'''
 
-
+def countBinarySubstrings(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if len(s) < 2: return 0
+        pre_len, cur_len, ans = 0, 1, 0
+        for i in range(1, len(s)):
+            if s[i] == s[i-1]:
+                cur_len += 1
+            else:
+                pre_len = cur_len
+                cur_len = 1
+            if pre_len >= cur_len:
+                ans += 1
+        return ans
+      
