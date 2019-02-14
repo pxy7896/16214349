@@ -50,3 +50,42 @@ def maxCount(self, m, n, ops):
                 min_n = i[1]
         return min_m * min_n
 
+  """
+  728. Self Dividing Numbers
+  给定范围[left, right]，找出其中所有能被自己各位数字整除的数。
+  Input: left = 1, right = 22
+  Output: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+  Note:
+  The boundaries of each input argument are 1 <= left <= right <= 10000.
+  
+  思路：对于小于10的，显然1-9；其他只要判断即可。
+  
+  """
+def selfDividingNumbers(self, left, right):
+        """
+        :type left: int
+        :type right: int
+        :rtype: List[int]
+        """
+        if right < 10:
+            return list(range(left, right+1))
+        ans = []
+        if left < 10:
+            ans = list(range(left, 10))
+            left = 10
+        for i in range(left, right+1):
+            num = i
+          # 含0的直接跳过
+            if '0' in str(num): continue
+            while i % (num%10) == 0:
+                num //= 10
+              # 全部整除
+                if num == 0:
+                    ans.append(i)
+                    break
+        return ans
+
+       
+"""
+
+"""
