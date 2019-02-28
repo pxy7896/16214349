@@ -34,3 +34,45 @@ for i in range(n):
 
 for k in sorted(d.keys()):
     print(str(k) + " " + str(d[k]))
+============================================================================================================
+输入整型数组和排序标识，对其元素按照升序或降序进行排序（一组测试用例可能会有多组数据）
+void sortIntegerArray(Integer[] pIntegerArray, int iSortFlag);
+iSortFlag为1是降序，0是升序
+示例1
+输入
+8
+1 2 4 9 3 55 64 25
+0
+输出
+1 2 3 4 9 25 55 64
+思路：非常简单，就是oj一定要处理多组数据，坑。同样是数字排序，输出时记得转换为字符。
+try:    
+    while 1:
+        n = int(input().rstrip())
+        tmp = input().split()
+        li = []
+        for i in tmp:
+            li.append(int(i))
+        li.sort()
+        flag = int(input().rstrip())
+        if flag == 0:
+            info = []
+            for i in li:
+                info.append(str(i))
+            print(' '.join(info))
+        else:
+            info = []
+            for i in li[::-1]:
+                info.append(str(i))
+            print(' '.join(info))
+except:
+    pass
+============================================================================================================
+
+
+
+
+
+
+
+
